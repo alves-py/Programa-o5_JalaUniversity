@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adicionar e Excluir Lista</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .button-container {
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      // Criando os elementos dinamicamente
+      const inputField = document.createElement("input");
+      inputField.type = "text";
+      inputField.placeholder = "Digite algo";
+
+      const addButton = document.createElement("button");
+      addButton.textContent = "Adicionar";
+
+      const deleteButton = document.createElement("button");
+      deleteButton.textContent = "Excluir";
+      deleteButton.disabled = true; // Inicialmente desativado
+
+      const buttonContainer = document.createElement("div");
+      buttonContainer.className = "button-container";
+      buttonContainer.appendChild(addButton);
+      buttonContainer.appendChild(deleteButton);
+
+      // Adiciona os elementos ao body
+      document.body.appendChild(inputField);
+      document.body.appendChild(buttonContainer);
+
+      // Lista dinâmica e conjunto para verificar duplicados
+      let list = null;
+      const uniqueItems = new Set();
+
+      // Lógica para adicionar itens à lista
+      addButton.addEventListener("click", () => {
+        const inputValue = inputField.value.trim();
+        if (!inputValue || uniqueItems.has(inputValue)) {
+          alert("Texto inválido ou já existente na lista.");
+          return;
+        }
+
+        if (!list) {
+          list = document.createElement("ul");
+          document.body.appendChild(list);
+        }
+
+        const listItem = document.createElement("li");
+        listItem.textContent = inputValue;
+        list.appendChild(listItem);
+
+        uniqueItems.add(inputValue);
+        inputField.value = "";
+        deleteButton.disabled = false; // Habilita o botão de excluir
+      });
+
+      // Lógica para excluir o último item da lista
+      deleteButton.addEventListener("click", () => {
+        if (list && list.lastChild) {
+          const lastItem = list.lastChild;
+          uniqueItems.delete(lastItem.textContent);
+          list.removeChild(lastItem);
+
+          if (list.childElementCount === 0) {
+            deleteButton.disabled = true; // Desativa o botão se a lista estiver vazia
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
